@@ -5,5 +5,6 @@ export default defineConfig({
   format: ['cjs', 'esm'],
   dts: true,
   clean: true,
-  external: ['vite']
+  external: ['vite'],
+  treeshake: true
 });
