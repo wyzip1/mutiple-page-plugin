@@ -1,5 +1,5 @@
 {
-  "name": "@lue/vite-plugin-multipage",
+  "name": "vite-plugin-auto-multipage",
   "version": "1.0.0",
   "description": "A Vite plugin for multi-page applications with configurable titles",
   "main": "dist/index.js",
