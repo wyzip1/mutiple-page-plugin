@@ -1,21 +1,22 @@
 import { Plugin } from "vite";
-import { glob } from "glob";
-import path from "path";
 import { MultiPageAutoOptions } from "./types";
-import { formatPageName, generateHtml } from "./utils";
+import { defaultTemplate } from "./html";
+import { findEntryPoints, type EntryPoint } from "./entry";
 import { DEFAULT_IGNORE_PATTERNS } from "./config";
 
 export default function MultiPageAutoPlugin(
-  options: MultiPageAutoOptions = {},
+  options: MultiPageAutoOptions = {}
 ): Plugin {
   const {
     renderTitle = (templateName) => templateName,
     ignore: customIgnore = [],
+    entry: entryConfig,
+    html: htmlConfig
   } = options;
 
   const ignorePatterns = [...DEFAULT_IGNORE_PATTERNS, ...customIgnore];
   const htmlCache = new Map<string, string>();
-  const mainCache = new Map<string, string>();
+  const entryPoints = new Map<string, EntryPoint>();
 
   return {
     name: "vite-plugin-multipage-auto",
@@ -31,17 +32,18 @@ export default function MultiPageAutoPlugin(
         const cached = htmlCache.get(id);
         if (cached) return cached;
 
-        const dir = path.dirname(id);
-        const pageName = formatPageName(dir);
-        const pageTitle = renderTitle(pageName);
+        const pageName = id.replace(process.cwd() + "/", "").split(".")[0];
+        const entry = entryPoints.get(pageName);
+        
+        if (!entry) return null;
 
-        const mainId = id.replace(process.cwd() + "/", "").split(".")[0];
-
-        if (!mainCache.has(mainId)) return null;
-        const html = generateHtml(
-          pageTitle,
-          mainCache.get(mainId)! + "/main.ts",
-        );
+        const templateFn = htmlConfig?.template || defaultTemplate;
+        const html = templateFn({
+          title: renderTitle(entry.pageName),
+          scriptPath: entry.entryPath,
+          head: htmlConfig?.head,
+          body: htmlConfig?.body
+        });
 
         htmlCache.set(id, html);
         return html;
@@ -49,25 +51,19 @@ export default function MultiPageAutoPlugin(
     },
 
     config: async () => {
-      const entries = await glob("**/main.ts", {
-        ignore: ignorePatterns,
-      });
-
+      const entries = await findEntryPoints(ignorePatterns, entryConfig);
       const input: Record<string, string> = {};
-      entries.forEach((file) => {
-        const dir = path.dirname(file);
 
-        const pageName = formatPageName(dir);
-        mainCache.set(pageName, dir);
-
-        input[pageName] = path.resolve(pageName + ".html");
+      entries.forEach(entry => {
+        input[entry.pageName] = entry.htmlPath;
+        entryPoints.set(entry.pageName, entry);
       });
 
       return {
         build: {
-          rollupOptions: { input },
-        },
+          rollupOptions: { input }
+        }
       };
-    },
+    }
   };
 }
