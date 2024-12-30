@@ -18,7 +18,8 @@ import { multiPagePlugin } from 'vite-plugin-multipage';
 export default defineConfig({
   plugins: [
     multiPagePlugin({
-      renderTitle: (templateName) => `${templateName} - My Site`
+      renderTitle: (templateName) => `${templateName} - My Site`,
+      ignore: ['custom-ignore/**'] // Optional: Add custom ignore patterns
     })
   ]
 });
@@ -32,6 +33,21 @@ Type: `(templateName: string) => string`
 Default: `(templateName) => templateName`
 
 A function to customize the title of each page based on the template name.
+
+### ignore
+
+Type: `string[]`
+Default: `[]`
+
+Additional glob patterns to ignore when searching for entry files. These patterns will be merged with the default ignore patterns:
+- node_modules/**
+- dist/**
+- build/**
+- coverage/**
+- .git/**
+- **/*.test.*
+- **/*.spec.*
+- **/__tests__/**
 
 ## License
 

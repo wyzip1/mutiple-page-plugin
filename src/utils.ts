@@ -1,10 +1,10 @@
-import path from 'path';
+import path from "path";
 
 /**
  * Formats the page name from the directory path
  */
 export function formatPageName(dir: string): string {
-  return dir === '.' ? 'index' : path.basename(dir);
+  return dir === "src" ? "index" : path.basename(dir);
 }
 
 /**

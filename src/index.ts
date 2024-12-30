@@ -1,2 +1,3 @@
-export { multiPagePlugin } from './plugin';
-export type { MultiPageOptions } from './types';
+import MultiPageAutoPlugin from './plugin'
+export default MultiPageAutoPlugin
+export type { MultiPageAutoOptions } from './types';
