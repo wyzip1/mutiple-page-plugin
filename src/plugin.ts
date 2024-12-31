@@ -38,13 +38,13 @@ export default function MultiPageAutoPlugin(
         const entry = entryPoints.get(pageName);
         
         if (!entry) return null;
-
-        const templateFn = pageConfig?.[entry.pageName].template || template || defaultTemplate;
+        const config = pageConfig?.[entry.pageName];
+        const templateFn = config?.template || template || defaultTemplate;
         const html = templateFn({
-          title: pageConfig?.[entry.pageName]?.title || entry.pageName,
+          title: config?.title || entry.pageName,
           scriptPath: entry.entryPath,
-          head: head.concat(pageConfig?.[entry.pageName]?.head|| []),
-          body: body.concat(pageConfig?.[entry.pageName]?.body || []),
+          head: head.concat(config?.head|| []),
+          body: body.concat(config?.body || []),
         });
 
         htmlCache.set(id, html);
