@@ -8,6 +8,10 @@ A Vite plugin for building multi-page applications with configurable page titles
 npm install vite-plugin-multipage-auto
 ```
 
+## Description
+
+  auto find entry file for custom build single page App 
+
 ## Usage
 
 ```typescript
@@ -44,41 +48,13 @@ export default defineConfig({
           </body>
         </html>
       `,
-      // Additional head tags
       head: [
         '<link rel="icon" href="/favicon.ico" />',
         '<meta name="description" content="My site" />'
       ],
-      // Additional body tags
-      body: [
-        '<div id="loading">Loading...</div>'
-      ]
+      body: ['<div id="loading">Loading...</div>']
       pageConfig: {
-        index: {
-          title: 'AAA'
-          template: ({ title, scriptPath, head, body }) => `
-            <!DOCTYPE html>
-            <html>
-              <head>
-                <title>${title}</title>
-                ${head?.join('\n') || ''}
-              </head>
-              <body>
-                <div id="app"></div>
-                ${body?.join('\n') || ''}
-                <script type="module" src="/${scriptPath}"></script>
-              </body>
-            </html>
-          `,
-          // Additional head tags
-          head: [
-            '<meta name="description" content="index page" />'
-          ],
-          // Additional body tags
-          body: [
-            '<div id="loading">Loading...</div>'
-          ]
-        }
+        index: { title: 'AAA' }
       }
     })
   ]
@@ -86,13 +62,6 @@ export default defineConfig({
 ```
 
 ## Options
-
-### renderTitle
-
-Type: `(templateName: string) => string`  
-Default: `(templateName) => templateName`
-
-A function to customize the title of each page based on the template name.
 
 ### ignore
 
@@ -119,6 +88,10 @@ HTML template configuration:
 - `template`: Custom template function for complete HTML control
 - `head`: Additional HTML tags to inject in `<head>`
 - `body`: Additional HTML tags to inject in `<body>`
+- `pageConfig` page key map html
+  - `template`: Custom template function for complete HTML control
+  - `head`: Additional HTML tags to inject in `<head>`
+  - `body`: Additional HTML tags to inject in `<body>`
 
 ## License
 
