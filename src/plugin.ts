@@ -8,10 +8,12 @@ export default function MultiPageAutoPlugin(
   options: MultiPageAutoOptions = {}
 ): Plugin {
   const {
-    renderTitle = (templateName) => templateName,
     ignore: customIgnore = [],
     entry: entryConfig,
-    html: htmlConfig
+    pageConfig,
+    head = [],
+    body = [],
+    template
   } = options;
 
   const ignorePatterns = [...DEFAULT_IGNORE_PATTERNS, ...customIgnore];
@@ -37,12 +39,12 @@ export default function MultiPageAutoPlugin(
         
         if (!entry) return null;
 
-        const templateFn = htmlConfig?.template || defaultTemplate;
+        const templateFn = pageConfig?.[entry.pageName].template || template || defaultTemplate;
         const html = templateFn({
-          title: renderTitle(entry.pageName),
+          title: pageConfig?.[entry.pageName]?.title || entry.pageName,
           scriptPath: entry.entryPath,
-          head: htmlConfig?.head,
-          body: htmlConfig?.body
+          head: head.concat(pageConfig?.[entry.pageName]?.head|| []),
+          body: body.concat(pageConfig?.[entry.pageName]?.body || []),
         });
 
         htmlCache.set(id, html);

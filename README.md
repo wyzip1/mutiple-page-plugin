@@ -1,11 +1,11 @@
-# vite-plugin-multipage
+# vite-plugin-multipage-auto
 
 A Vite plugin for building multi-page applications with configurable page titles.
 
 ## Installation
 
 ```bash
-npm install vite-plugin-multipage
+npm install vite-plugin-multipage-auto
 ```
 
 ## Usage
@@ -13,17 +13,13 @@ npm install vite-plugin-multipage
 ```typescript
 // vite.config.ts
 import { defineConfig } from 'vite';
-import { multiPagePlugin } from 'vite-plugin-multipage';
+import MultiPageAutoPlugin from 'vite-plugin-multipage-auto';
 
 export default defineConfig({
   plugins: [
     multiPagePlugin({
-      // Customize page titles
-      renderTitle: (templateName) => `${templateName} - My Site`,
-      
       // Custom ignore patterns
       ignore: ['custom-ignore/**'],
-      
       // Custom entry file configuration
       entry: {
         // Custom entry file patterns
@@ -33,31 +29,56 @@ export default defineConfig({
       },
       
       // HTML template customization
-      html: {
-        // Custom HTML template
-        template: ({ title, scriptPath, head, body }) => `
-          <!DOCTYPE html>
-          <html>
-            <head>
-              <title>${title}</title>
-              ${head?.join('\n') || ''}
-            </head>
-            <body>
-              <div id="app"></div>
-              ${body?.join('\n') || ''}
-              <script type="module" src="/${scriptPath}"></script>
-            </body>
-          </html>
-        `,
-        // Additional head tags
-        head: [
-          '<link rel="icon" href="/favicon.ico" />',
-          '<meta name="description" content="My site" />'
-        ],
-        // Additional body tags
-        body: [
-          '<div id="loading">Loading...</div>'
-        ]
+      // Custom HTML template
+      template: ({ title, scriptPath, head, body }) => `
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <title>${title}</title>
+            ${head?.join('\n') || ''}
+          </head>
+          <body>
+            <div id="app"></div>
+            ${body?.join('\n') || ''}
+            <script type="module" src="/${scriptPath}"></script>
+          </body>
+        </html>
+      `,
+      // Additional head tags
+      head: [
+        '<link rel="icon" href="/favicon.ico" />',
+        '<meta name="description" content="My site" />'
+      ],
+      // Additional body tags
+      body: [
+        '<div id="loading">Loading...</div>'
+      ]
+      pageConfig: {
+        index: {
+          title: 'AAA'
+          template: ({ title, scriptPath, head, body }) => `
+            <!DOCTYPE html>
+            <html>
+              <head>
+                <title>${title}</title>
+                ${head?.join('\n') || ''}
+              </head>
+              <body>
+                <div id="app"></div>
+                ${body?.join('\n') || ''}
+                <script type="module" src="/${scriptPath}"></script>
+              </body>
+            </html>
+          `,
+          // Additional head tags
+          head: [
+            '<meta name="description" content="index page" />'
+          ],
+          // Additional body tags
+          body: [
+            '<div id="loading">Loading...</div>'
+          ]
+        }
       }
     })
   ]

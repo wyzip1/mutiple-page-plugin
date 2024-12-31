@@ -4,7 +4,7 @@ export interface EntryConfig {
    * Defaults to ['main.ts', 'main.tsx']
    */
   patterns?: string[];
-  
+
   /**
    * Transform the entry path before it's used
    * Useful for custom entry file handling
@@ -12,13 +12,11 @@ export interface EntryConfig {
   transform?: (entryPath: string) => string;
 }
 
-export interface HtmlConfig {
+export interface HTMLConfig {
   /**
-   * Custom template function to generate HTML
-   * Complete control over the HTML structure
+   * customize the title of each page
    */
-  template?: (options: HtmlTemplateOptions) => string;
-  
+  title?: string;
   /**
    * Additional head tags to inject
    * Array of HTML strings to insert in <head>
@@ -30,6 +28,12 @@ export interface HtmlConfig {
    * Array of HTML strings to insert in <body>
    */
   body?: string[];
+
+  /**
+   * Custom template function to generate HTML
+   * Complete control over the HTML structure
+   */
+  template?: (options: HtmlTemplateOptions) => string;
 }
 
 export interface HtmlTemplateOptions {
@@ -42,12 +46,7 @@ export interface HtmlTemplateOptions {
   body?: string[];
 }
 
-export interface MultiPageAutoOptions {
-  /**
-   * Function to customize the title of each page
-   */
-  renderTitle?: (templateName: string) => string;
-
+export type MultiPageAutoOptions = HTMLConfig & {
   /**
    * Custom ignore patterns for file globbing
    */
@@ -58,8 +57,5 @@ export interface MultiPageAutoOptions {
    */
   entry?: EntryConfig;
 
-  /**
-   * HTML template configuration
-   */
-  html?: HtmlConfig;
+  pageConfig?: Record<string, HTMLConfig>
 }
