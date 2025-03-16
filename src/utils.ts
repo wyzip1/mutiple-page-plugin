@@ -1,7 +1,7 @@
 import path from "path";
 
 export function getPathSplitter(dir: string): "/" | "\\" | string {
-  return dir.includes('"/"') ? "/" : "\\";
+  return dir.includes('/') ? "/" : "\\";
 }
 
 export function covertSrc(path: string): string {
