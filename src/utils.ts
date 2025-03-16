@@ -1,5 +1,13 @@
 import path from "path";
 
+export function getPathSplitter(dir: string): "/" | "\\" | string {
+  return dir.includes('"/"') ? "/" : "\\";
+}
+
+export function covertSrc(path: string): string {
+  return path.replace(/\//g, getPathSplitter(path));
+}
+
 /**
  * Formats the page name from the directory path
  */

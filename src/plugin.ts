@@ -3,6 +3,7 @@ import { MultiPageAutoOptions } from "./types";
 import { defaultTemplate } from "./html";
 import { findEntryPoints, type EntryPoint } from "./entry";
 import { DEFAULT_IGNORE_PATTERNS } from "./config";
+import { covertSrc, getPathSplitter } from "./utils";
 
 export default function MultiPageAutoPlugin(
   options: MultiPageAutoOptions = {}
@@ -34,7 +35,9 @@ export default function MultiPageAutoPlugin(
         const cached = htmlCache.get(id);
         if (cached) return cached;
 
-        const pageName = id.replace(process.cwd() + "/", "").split(".")[0];
+        const pageName = covertSrc(id)
+          .replace(process.cwd() + getPathSplitter(id), "")
+          .split(".")[0];
         const entry = entryPoints.get(pageName);
         
         if (!entry) return null;
